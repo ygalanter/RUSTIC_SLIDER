@@ -1,0 +1,79 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "yuri@galanter.net",
+    "longName": "Color Slider",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "fonts/digital-7 (mono).ttf",
+                "name": "DIGITAL_SEVEN_MONO_50",
+                "type": "font"
+            },
+            {
+                "file": "images/9.png",
+                "name": "NUM_9",
+                "type": "png"
+            },
+            {
+                "file": "images/8.png",
+                "name": "NUM_8",
+                "type": "png"
+            },
+            {
+                "file": "images/7.png",
+                "name": "NUM_7",
+                "type": "png"
+            },
+            {
+                "file": "images/6.png",
+                "name": "NUM_6",
+                "type": "png"
+            },
+            {
+                "file": "images/5.png",
+                "name": "NUM_5",
+                "type": "png"
+            },
+            {
+                "file": "images/4.png",
+                "name": "NUM_4",
+                "type": "png"
+            },
+            {
+                "file": "images/3.png",
+                "name": "NUM_3",
+                "type": "png"
+            },
+            {
+                "file": "images/2.png",
+                "name": "NUM_2",
+                "type": "png"
+            },
+            {
+                "file": "images/1.png",
+                "name": "NUM_1",
+                "type": "png"
+            },
+            {
+                "file": "images/0.png",
+                "name": "NUM_0",
+                "type": "png"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "Color Slider",
+    "targetPlatforms": [
+        "basalt"
+    ],
+    "uuid": "43e25646-389e-461d-b045-4856b42b2c7a",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
