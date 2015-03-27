@@ -19,6 +19,12 @@ int NUM_NUM[] = {RESOURCE_ID_NUM_0, RESOURCE_ID_NUM_1, RESOURCE_ID_NUM_2, RESOUR
 // animation stop callback 
 void on_animation_stopped(Animation *anim, bool finished, SlideLayer *slide_layer)
 {
+  
+   // destroying animation, but only in applite
+   #ifndef PBL_COLOR
+      property_animation_destroy((PropertyAnimation*) anim);
+   #endif
+  
    // destroying old bitmap in static layer if it exists
    GBitmap *old_bitmap = (GBitmap *)bitmap_layer_get_bitmap(slide_layer->static_bitmap_layer);
    if (old_bitmap) gbitmap_destroy(old_bitmap);
@@ -65,13 +71,16 @@ void slide_layer_animate_to(SlideLayer *slide_layer, uint8_t next_value){
     
     slide_layer->current_Digit = next_value;
     
+    GRect finish = layer_get_bounds(slide_layer->layer);
+    GRect start = GRect(finish.size.w * ANIM_START_X, finish.size.h * ANIM_START_Y, finish.size.w, finish.size.h);
+    
+    Layer *blayer = bitmap_layer_get_layer(slide_layer->anim_bitmap_layer);
+    layer_set_frame(blayer, start);
+    
     slide_layer->gbitmap_digit = gbitmap_create_with_resource(NUM_NUM[next_value]);
     bitmap_layer_set_bitmap(slide_layer->anim_bitmap_layer, slide_layer->gbitmap_digit);
     
-    // creating and setting animation
-    GRect finish = layer_get_bounds(slide_layer->layer);
-    GRect start = GRect(finish.size.w * ANIM_START_X, finish.size.h * ANIM_START_Y, finish.size.w, finish.size.h);
-    slide_layer->anim = property_animation_create_layer_frame(bitmap_layer_get_layer(slide_layer->anim_bitmap_layer), &start, &finish);
+    slide_layer->anim = property_animation_create_layer_frame(blayer, &start, &finish);
   
     AnimationHandlers handlers = {
         .stopped = (AnimationStoppedHandler) on_animation_stopped
