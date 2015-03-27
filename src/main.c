@@ -21,7 +21,7 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   strftime(buffer_dow, sizeof("SAT"), "%a", tick_time);
   text_layer_set_text(text_layer_dow, buffer_dow);
   
-    if (!clock_is_24h_style()) {
+    if (true /*!clock_is_24h_style()*/) {
     
         if( tick_time->tm_hour > 11 ) {   // YG Jun-25-2014: 0..11 - am 12..23 - pm
             strcat(buffer_dow, " PM" );
@@ -50,18 +50,26 @@ static void window_load(Window *window) {
     layer_add_child(window_layer, slide_layer_get_layer(slide_layer[i]));
   }
   
-  text_layer_date = text_layer_create(GRect(0, -5, 144, 60));
-  text_layer_set_background_color(text_layer_date, GColorDarkGray);
-  text_layer_set_text_color(text_layer_date, GColorRajah);
+  text_layer_date = text_layer_create(GRect(0, 4, 144, 40));
+  #ifndef PBL_COLOR
+    text_layer_set_background_color(text_layer_date, GColorBlack);
+  #else
+    text_layer_set_background_color(text_layer_date, GColorDarkGray);
+  #endif
+  text_layer_set_text_color(text_layer_date, GColorWhite);
   text_layer_set_text_alignment(text_layer_date, GTextAlignmentCenter);
-  text_layer_set_font(text_layer_date, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_DIGITAL_SEVEN_MONO_50)));
+  text_layer_set_font(text_layer_date, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_CELLA_30)));
   layer_add_child(window_layer, text_layer_get_layer(text_layer_date));
   
-  text_layer_dow = text_layer_create(GRect(0, 110, 144, 60));
-  text_layer_set_background_color(text_layer_dow, GColorDarkGray);
-  text_layer_set_text_color(text_layer_dow, GColorRajah);
+  text_layer_dow = text_layer_create(GRect(0, 120, 144, 40));
+  #ifndef PBL_COLOR
+    text_layer_set_background_color(text_layer_dow, GColorBlack);
+  #else
+    text_layer_set_background_color(text_layer_dow, GColorDarkGray);
+  #endif
+  text_layer_set_text_color(text_layer_dow, GColorWhite);
   text_layer_set_text_alignment(text_layer_dow, GTextAlignmentCenter);
-  text_layer_set_font(text_layer_dow, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_DIGITAL_SEVEN_MONO_50)));
+  text_layer_set_font(text_layer_dow, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_CELLA_30)));
   layer_add_child(window_layer, text_layer_get_layer(text_layer_dow));
     
   
@@ -84,6 +92,12 @@ static void init(void) {
 
   // creating window
   window = window_create();
+  #ifndef PBL_COLOR
+    window_set_background_color(window, GColorBlack);
+  #else
+    window_set_background_color(window, GColorDarkGray);
+  #endif
+  
   window_set_window_handlers(window, (WindowHandlers) {
     .load = window_load,
     .unload = window_unload,

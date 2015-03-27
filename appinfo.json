@@ -9,57 +9,57 @@
     "resources": {
         "media": [
             {
-                "file": "fonts/digital-7 (mono).ttf",
-                "name": "DIGITAL_SEVEN_MONO_50",
+                "file": "fonts/Cella.ttf",
+                "name": "CELLA_30",
                 "type": "font"
             },
             {
-                "file": "images/9.png",
+                "file": "images/9bw.png",
                 "name": "NUM_9",
                 "type": "png"
             },
             {
-                "file": "images/8.png",
+                "file": "images/8bw.png",
                 "name": "NUM_8",
                 "type": "png"
             },
             {
-                "file": "images/7.png",
+                "file": "images/7bw.png",
                 "name": "NUM_7",
                 "type": "png"
             },
             {
-                "file": "images/6.png",
+                "file": "images/6bw.png",
                 "name": "NUM_6",
                 "type": "png"
             },
             {
-                "file": "images/5.png",
+                "file": "images/5bw.png",
                 "name": "NUM_5",
                 "type": "png"
             },
             {
-                "file": "images/4.png",
+                "file": "images/4bw.png",
                 "name": "NUM_4",
                 "type": "png"
             },
             {
-                "file": "images/3.png",
+                "file": "images/3bw.png",
                 "name": "NUM_3",
                 "type": "png"
             },
             {
-                "file": "images/2.png",
+                "file": "images/2bw.png",
                 "name": "NUM_2",
                 "type": "png"
             },
             {
-                "file": "images/1.png",
+                "file": "images/1bw.png",
                 "name": "NUM_1",
                 "type": "png"
             },
             {
-                "file": "images/0.png",
+                "file": "images/0bw.png",
                 "name": "NUM_0",
                 "type": "png"
             }
@@ -68,6 +68,7 @@
     "sdkVersion": "3",
     "shortName": "Color Slider",
     "targetPlatforms": [
+        "aplite",
         "basalt"
     ],
     "uuid": "43e25646-389e-461d-b045-4856b42b2c7a",

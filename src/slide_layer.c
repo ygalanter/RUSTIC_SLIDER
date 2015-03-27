@@ -1,22 +1,33 @@
 #include <pebble.h>
 #include "slide_layer.h"
+
+// Animation duration & delay  
+#define ANIMATION_DURATION 1000
+#define ANIMATION_DELAY 0  
   
-// resources for numbers
+// Animation initial horizontal pozition: -1 = from left, 0 = center, 1 = from right
+#define ANIM_START_X  1
+// Animation initial vertical pozition: -1 = from top, 0 = center, 1 = from bottom
+#define ANIM_START_Y  1  
+// you can combine both  
+  
+  
+// array of resources IDs for numbers
 int NUM_NUM[] = {RESOURCE_ID_NUM_0, RESOURCE_ID_NUM_1, RESOURCE_ID_NUM_2, RESOURCE_ID_NUM_3, RESOURCE_ID_NUM_4,
                  RESOURCE_ID_NUM_5, RESOURCE_ID_NUM_6, RESOURCE_ID_NUM_7, RESOURCE_ID_NUM_8, RESOURCE_ID_NUM_9};
-  
+
+// animation stop callback 
 void on_animation_stopped(Animation *anim, bool finished, SlideLayer *slide_layer)
 {
+   // destroying old bitmap in static layer if it exists
    GBitmap *old_bitmap = (GBitmap *)bitmap_layer_get_bitmap(slide_layer->static_bitmap_layer);
    if (old_bitmap) gbitmap_destroy(old_bitmap);
+  
+   // saving new bitmap in static layer
    bitmap_layer_set_bitmap(slide_layer->static_bitmap_layer, slide_layer->gbitmap_digit);
 }  
   
 SlideLayer* slide_layer_create(GRect frame) {
-  
-  //start & end of animation for anim_bitmap_layer
-  GRect start = GRect(-frame.size.w, 0, frame.size.w, frame.size.h);
-  GRect finish = GRect(0, 0, frame.size.w, frame.size.h);
   
   SlideLayer* slide_layer = malloc(sizeof(SlideLayer)); // allocating memory for side_layer items
 
@@ -24,9 +35,10 @@ SlideLayer* slide_layer_create(GRect frame) {
   slide_layer->current_Digit = -1;
   
   // creating bitmap layers
-  slide_layer->static_bitmap_layer = bitmap_layer_create(finish);
+  GRect bound = GRect(0, 0, frame.size.w, frame.size.h);
+  slide_layer->static_bitmap_layer = bitmap_layer_create(bound);
   layer_add_child(slide_layer->layer, bitmap_layer_get_layer(slide_layer->static_bitmap_layer));
-  slide_layer->anim_bitmap_layer = bitmap_layer_create(start);
+  slide_layer->anim_bitmap_layer = bitmap_layer_create(bound);
   layer_add_child(slide_layer->layer, bitmap_layer_get_layer(slide_layer->anim_bitmap_layer));
   
   return slide_layer;                    
@@ -58,7 +70,7 @@ void slide_layer_animate_to(SlideLayer *slide_layer, uint8_t next_value){
     
     // creating and setting animation
     GRect finish = layer_get_bounds(slide_layer->layer);
-    GRect start = GRect(-finish.size.w, 0, finish.size.w, finish.size.h);
+    GRect start = GRect(finish.size.w * ANIM_START_X, finish.size.h * ANIM_START_Y, finish.size.w, finish.size.h);
     slide_layer->anim = property_animation_create_layer_frame(bitmap_layer_get_layer(slide_layer->anim_bitmap_layer), &start, &finish);
   
     AnimationHandlers handlers = {
@@ -67,8 +79,8 @@ void slide_layer_animate_to(SlideLayer *slide_layer, uint8_t next_value){
     animation_set_handlers((Animation*) slide_layer->anim, handlers, slide_layer);
     
     animation_set_curve((Animation*) slide_layer->anim, AnimationCurveLinear);
-    animation_set_duration((Animation*) slide_layer->anim, 1000);
-    animation_set_delay((Animation*) slide_layer->anim, 0);
+    animation_set_duration((Animation*) slide_layer->anim, ANIMATION_DURATION);
+    animation_set_delay((Animation*) slide_layer->anim, ANIMATION_DELAY);
     animation_schedule((Animation*) slide_layer->anim);
     
   }
