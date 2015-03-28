@@ -21,7 +21,7 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   strftime(buffer_dow, sizeof("SAT"), "%a", tick_time);
   text_layer_set_text(text_layer_dow, buffer_dow);
   
-    if (true /*!clock_is_24h_style()*/) {
+    if (!clock_is_24h_style()) {
     
         if( tick_time->tm_hour > 11 ) {   // YG Jun-25-2014: 0..11 - am 12..23 - pm
             strcat(buffer_dow, " PM" );
@@ -88,7 +88,12 @@ static void window_unload(Window *window) {
 
 
 static void init(void) {
-  setlocale(LC_ALL, "");
+  
+  char *sys_locale = setlocale(LC_ALL, "");
+  // we're not supporting chinese yet
+  if (strcmp("zh_CN", sys_locale) || strcmp("zh_TW", sys_locale) == 0) {
+    setlocale(LC_ALL, "en_US");
+  }
 
   // creating window
   window = window_create();

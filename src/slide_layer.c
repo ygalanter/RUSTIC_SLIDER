@@ -6,9 +6,9 @@
 #define ANIMATION_DELAY 0  
   
 // Animation initial horizontal pozition: -1 = from left, 0 = center, 1 = from right
-#define ANIM_START_X  1
+#define ANIM_START_X  -1
 // Animation initial vertical pozition: -1 = from top, 0 = center, 1 = from bottom
-#define ANIM_START_Y  1  
+#define ANIM_START_Y 0  
 // you can combine both  
   
   

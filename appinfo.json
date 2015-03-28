@@ -4,10 +4,16 @@
         ""
     ],
     "companyName": "yuri@galanter.net",
-    "longName": "Color Slider",
+    "longName": "Rustic Slider",
     "projectType": "native",
     "resources": {
         "media": [
+            {
+                "file": "images/menu_bw.png",
+                "menuIcon": true,
+                "name": "MENU",
+                "type": "png"
+            },
             {
                 "file": "fonts/Cella.ttf",
                 "name": "CELLA_30",
@@ -66,14 +72,14 @@
         ]
     },
     "sdkVersion": "3",
-    "shortName": "Color Slider",
+    "shortName": "Rustic Slider",
     "targetPlatforms": [
         "aplite",
         "basalt"
     ],
     "uuid": "43e25646-389e-461d-b045-4856b42b2c7a",
     "versionCode": 1,
-    "versionLabel": "1.0",
+    "versionLabel": "1.2",
     "watchapp": {
         "watchface": true
     }
