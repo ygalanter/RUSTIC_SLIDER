@@ -1,7 +1,9 @@
 {
-    "appKeys": {},
+    "appKeys": {
+        "KEY_DIRECTION": 1
+    },
     "capabilities": [
-        ""
+        "configurable"
     ],
     "companyName": "yuri@galanter.net",
     "longName": "Rustic Slider",
@@ -79,7 +81,7 @@
     ],
     "uuid": "43e25646-389e-461d-b045-4856b42b2c7a",
     "versionCode": 1,
-    "versionLabel": "1.2",
+    "versionLabel": "1.3",
     "watchapp": {
         "watchface": true
     }

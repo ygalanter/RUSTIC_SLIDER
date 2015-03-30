@@ -26,3 +26,6 @@ void slide_layer_destroy(SlideLayer *slide_layer);
 Layer* slide_layer_get_layer(SlideLayer *slide_layer);
 
 void slide_layer_animate_to(SlideLayer *slide_layer, uint8_t next_value);
+
+// sets animation direction based on passed in flag
+void slide_layer_set_animation_direction(int direction);

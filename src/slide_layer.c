@@ -6,9 +6,9 @@
 #define ANIMATION_DELAY 0  
   
 // Animation initial horizontal pozition: -1 = from left, 0 = center, 1 = from right
-#define ANIM_START_X  -1
+int ANIM_START_X = -1;
 // Animation initial vertical pozition: -1 = from top, 0 = center, 1 = from bottom
-#define ANIM_START_Y 0  
+int ANIM_START_Y = 0;
 // you can combine both  
   
   
@@ -93,4 +93,43 @@ void slide_layer_animate_to(SlideLayer *slide_layer, uint8_t next_value){
     animation_schedule((Animation*) slide_layer->anim);
     
   }
+}
+
+// sets animation direction based on passed in flag
+void slide_layer_set_animation_direction(int direction) {
+  switch (direction) {
+    case 0: // from right
+       ANIM_START_X = -1;
+       ANIM_START_Y = 0;
+       break;
+    case 1: // from top right
+       ANIM_START_X = -1;
+       ANIM_START_Y = -1;
+       break;    
+    case 2: // from top
+       ANIM_START_X = 0;
+       ANIM_START_Y = -1;
+       break;    
+    case 3: // from top left
+       ANIM_START_X = 1;
+       ANIM_START_Y = -1;
+       break;    
+    case 4: // from left
+       ANIM_START_X = 1;
+       ANIM_START_Y = 0;
+       break;    
+    case 5: // from bottom left
+       ANIM_START_X = 1;
+       ANIM_START_Y = 1;
+       break;    
+    case 6: // from bottom
+       ANIM_START_X = 0;
+       ANIM_START_Y = 1;
+       break;    
+    case 7: // from bottom right
+       ANIM_START_X = -1;
+       ANIM_START_Y = 1;
+       break;
+  }
+  
 }

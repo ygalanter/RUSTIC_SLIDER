@@ -2,6 +2,8 @@
 #include "main.h"
 #include "slide_layer.h"
   
+#define KEY_DIRECTION 1  
+  
 Window *window;  
 
 static TextLayer *text_layer_date;
@@ -12,7 +14,31 @@ char buffer_dow[] = "SAT   ";
 
 SlideLayer *slide_layer[4];
 
+// handle configuration change
+static void in_recv_handler(DictionaryIterator *iterator, void *context) {
+  Tuple *t = dict_read_first(iterator);
 
+  while (t)  {
+    
+    switch(t->key)    {
+
+      // if config to set animation direction received
+      case KEY_DIRECTION:
+         APP_LOG(APP_LOG_LEVEL_DEBUG, "direction received: %d", t->value->int8);
+         persist_write_int(KEY_DIRECTION, t->value->int8);
+         slide_layer_set_animation_direction(t->value->int8);
+         break;
+   
+    }    
+    
+    t = dict_read_next(iterator);
+  
+  }
+}
+
+
+
+// handle time change
 void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   
   strftime(buffer_date, sizeof("SEP 31"), "%b %d", tick_time);
@@ -108,6 +134,14 @@ static void init(void) {
     .unload = window_unload,
   });
   
+  // subscribing to JS messages
+  app_message_register_inbox_received((AppMessageInboxReceived) in_recv_handler);
+  app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
+  
+  // setting animation direction remembered in persistant storage
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "direction read: %d", (int)persist_read_int(KEY_DIRECTION));
+  slide_layer_set_animation_direction(persist_read_int(KEY_DIRECTION));
+  
   // subscribing to timer
   tick_timer_service_subscribe(MINUTE_UNIT, (TickHandler) tick_handler);
   
@@ -117,6 +151,7 @@ static void init(void) {
 
 
 static void deinit(void) {
+  app_message_deregister_callbacks();
   tick_timer_service_unsubscribe();
   window_destroy(window);
 }
