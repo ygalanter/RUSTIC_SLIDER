@@ -18,18 +18,16 @@ Pebble.addEventListener("showConfiguration",
 Pebble.addEventListener("webviewclosed",
   function(e) {
     //Get JSON dictionary
-    var configuration = JSON.parse(decodeURIComponent(e.response));
-    var configurationSTR = JSON.stringify(configuration);
-    console.log("Configuration window returned: " + configurationSTR);
+    var settings = JSON.parse(decodeURIComponent(e.response));
     
-    if (configurationSTR != '{}') {
+    if (settings) {
       
-      localStorage.setItem("rustic_slider_config", configurationSTR);
- 
+      localStorage.setItem("rustic_slider_config", JSON.stringify(settings));
+      
       //Send to Pebble, persist there
       Pebble.sendAppMessage(
           {
-            "KEY_DIRECTION": configuration.direction
+            "KEY_DIRECTION": settings.direction
           },
         function(e) {
           console.log("Sending settings data...");

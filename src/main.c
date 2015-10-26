@@ -47,7 +47,7 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   strftime(buffer_dow, sizeof("SAT"), "%a", tick_time);
   text_layer_set_text(text_layer_dow, buffer_dow);
   
-    if (!clock_is_24h_style()) {
+    if (!clock_is_24h_style()) { //test
     
         if( tick_time->tm_hour > 11 ) {   // YG Jun-25-2014: 0..11 - am 12..23 - pm
             strcat(buffer_dow, " PM" );
@@ -70,13 +70,15 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 
 static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
+  GRect bounds = layer_get_bounds(window_layer);
  
-  for (int i=0; i<4; i++){
-    slide_layer[i] = slide_layer_create(NUM_COORDS[i]);
-    layer_add_child(window_layer, slide_layer_get_layer(slide_layer[i]));
-  }
+  #ifdef PBL_RECT
+    text_layer_date = text_layer_create(GRect(0, 4, bounds.size.w, 40));
+  #else
+    text_layer_date = text_layer_create(GRect(0, 21, bounds.size.w, 40));
+  #endif
   
-  text_layer_date = text_layer_create(GRect(0, 4, 144, 40));
+  
   #ifndef PBL_COLOR
     text_layer_set_background_color(text_layer_date, GColorBlack);
   #else
@@ -87,7 +89,7 @@ static void window_load(Window *window) {
   text_layer_set_font(text_layer_date, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_CELLA_30)));
   layer_add_child(window_layer, text_layer_get_layer(text_layer_date));
   
-  text_layer_dow = text_layer_create(GRect(0, 120, 144, 40));
+  text_layer_dow = text_layer_create(GRect(0, 120, bounds.size.w, 40));
   #ifndef PBL_COLOR
     text_layer_set_background_color(text_layer_dow, GColorBlack);
   #else
@@ -97,6 +99,11 @@ static void window_load(Window *window) {
   text_layer_set_text_alignment(text_layer_dow, GTextAlignmentCenter);
   text_layer_set_font(text_layer_dow, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_CELLA_30)));
   layer_add_child(window_layer, text_layer_get_layer(text_layer_dow));
+  
+  for (int i=0; i<4; i++){
+    slide_layer[i] = slide_layer_create(NUM_COORDS[i]);
+    layer_add_child(window_layer, slide_layer_get_layer(slide_layer[i]));
+  }
     
   
 }
