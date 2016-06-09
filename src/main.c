@@ -1,8 +1,7 @@
 #include <pebble.h>
 #include "main.h"
-#include "slide_layer.h"
+#include <pebble-slide-layer/pebble-slide-layer.h>
   
-#define KEY_DIRECTION 1  
   
 Window *window;  
 
@@ -14,22 +13,38 @@ char buffer_dow[] = "SAT   ";
 
 SlideLayer *slide_layer[4];
 
+// changes slide animation direction of all 4 layers
+static void change_animation_direction(int direction) {
+    slide_layer_set_animation_direction(direction, slide_layer[0]);
+    slide_layer_set_animation_direction(direction, slide_layer[1]);
+    slide_layer_set_animation_direction(direction, slide_layer[2]);
+    slide_layer_set_animation_direction(direction, slide_layer[3]);
+}
+
 // handle configuration change
 static void in_recv_handler(DictionaryIterator *iterator, void *context) {
   Tuple *t = dict_read_first(iterator);
-
+  
   while (t)  {
     
-    switch(t->key)    {
-
-      // if config to set animation direction received
-      case KEY_DIRECTION:
-         APP_LOG(APP_LOG_LEVEL_DEBUG, "direction received: %d", t->value->int8);
-         persist_write_int(KEY_DIRECTION, t->value->int8);
-         slide_layer_set_animation_direction(t->value->int8);
-         break;
-   
-    }    
+    if (t->key == MESSAGE_KEY_DIRECTION)    {
+      
+        // correction for previous definition in HTML config
+        int direction;
+      
+        switch (t->value->int8) {
+          case SLIDE_TO_TOP_LEFT: direction = SLIDE_TO_BOTTOM_LEFT; break;
+          case SLIDE_TO_BOTTOM_LEFT: direction = SLIDE_TO_TOP_LEFT; break;
+          case SLIDE_TO_TOP: direction = SLIDE_TO_BOTTOM; break;
+          case SLIDE_TO_BOTTOM: direction = SLIDE_TO_TOP; break;
+          case SLIDE_TO_TOP_RIGHT: direction = SLIDE_TO_BOTTOM_RIGHT; break;
+          case SLIDE_TO_BOTTOM_RIGHT: direction = SLIDE_TO_TOP_RIGHT; break;
+          default: direction = t->value->int8; break;
+        }
+      
+         persist_write_int(MESSAGE_KEY_DIRECTION, direction);
+         change_animation_direction(direction);
+   }    
     
     t = dict_read_next(iterator);
   
@@ -59,11 +74,30 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
  
     }; 
  
-    slide_layer_animate_to(slide_layer[0], tick_time->tm_hour / 10);
-    slide_layer_animate_to(slide_layer[1], tick_time->tm_hour % 10);
-    slide_layer_animate_to(slide_layer[2], tick_time->tm_min / 10);
-    slide_layer_animate_to(slide_layer[3], tick_time->tm_min % 10);
-     
+    // only animating to next digit if the digit changed
+    if (h1 != tick_time->tm_hour / 10) {
+      h1 = tick_time->tm_hour / 10;
+      slide_layer[0]->gbitmap = gbitmap_create_with_resource(NUM_NUM[h1]);
+      slide_layer_animate(slide_layer[0]);
+    }
+  
+    if (h2 != tick_time->tm_hour % 10) {
+      h2 = tick_time->tm_hour % 10;
+      slide_layer[1]->gbitmap = gbitmap_create_with_resource(NUM_NUM[h2]);
+      slide_layer_animate(slide_layer[1]);
+    }
+  
+    if (m1 != tick_time->tm_min / 10) {
+      m1 = tick_time->tm_min / 10;
+      slide_layer[2]->gbitmap = gbitmap_create_with_resource(NUM_NUM[m1]);
+      slide_layer_animate(slide_layer[2]);
+    }
+  
+    if (m2 != tick_time->tm_min % 10) {
+      m2 = tick_time->tm_min % 10;
+      slide_layer[3]->gbitmap = gbitmap_create_with_resource(NUM_NUM[m2]);
+      slide_layer_animate(slide_layer[3]);
+    } 
 }    
 
 
@@ -105,6 +139,8 @@ static void window_load(Window *window) {
     layer_add_child(window_layer, slide_layer_get_layer(slide_layer[i]));
   }
     
+  // setting animation direction remembered in persistant storage
+  change_animation_direction(persist_read_int(MESSAGE_KEY_DIRECTION));
   
 }
 
@@ -143,11 +179,8 @@ static void init(void) {
   
   // subscribing to JS messages
   app_message_register_inbox_received((AppMessageInboxReceived) in_recv_handler);
-  app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
-  
-  // setting animation direction remembered in persistant storage
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "direction read: %d", (int)persist_read_int(KEY_DIRECTION));
-  slide_layer_set_animation_direction(persist_read_int(KEY_DIRECTION));
+  app_message_open(APP_MESSAGE_INBOX_SIZE_MINIMUM, APP_MESSAGE_OUTBOX_SIZE_MINIMUM);
+
   
   // subscribing to timer
   tick_timer_service_subscribe(MINUTE_UNIT, (TickHandler) tick_handler);

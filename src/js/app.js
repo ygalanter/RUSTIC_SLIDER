@@ -27,10 +27,10 @@ Pebble.addEventListener("webviewclosed",
       //Send to Pebble, persist there
       Pebble.sendAppMessage(
           {
-            "KEY_DIRECTION": settings.direction
+            "DIRECTION": settings.direction
           },
         function(e) {
-          console.log("Sending settings data...");
+          console.log("Sending settings data... DIRECTION");
         },
         function(e) {
           console.log("Settings feedback failed!");
