@@ -1,7 +1,7 @@
 {
     "author": "yuri@galanter.net",
     "dependencies": {
-        "pebble-slide-layer": "^1.1.1"
+        "pebble-slide-layer": "^1.1.2"
     },
     "keywords": [],
     "name": "rustic-slider",
@@ -84,12 +84,13 @@
         "targetPlatforms": [
             "aplite",
             "basalt",
-            "chalk"
+            "chalk",
+            "diorite"
         ],
         "uuid": "43e25646-389e-461d-b045-4856b42b2c7a",
         "watchapp": {
             "watchface": true
         }
     },
-    "version": "2.1.0"
+    "version": "2.2.0"
 }
